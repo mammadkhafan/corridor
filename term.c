@@ -5,6 +5,7 @@
 #include<math.h>
 int hbj;
 int rdt;
+int bjugvjhbhj;
 
 char board[32][32];     //global board
 
