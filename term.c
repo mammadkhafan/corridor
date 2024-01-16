@@ -3,6 +3,7 @@
 #include<conio.h>
 #include<time.h>
 #include<math.h>
+int hbj;
 
 
 char board[32][32];     //global board
