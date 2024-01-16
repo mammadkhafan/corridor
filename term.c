@@ -4,7 +4,7 @@
 #include<time.h>
 #include<math.h>
 int hbj;
-
+int rdt;
 
 char board[32][32];     //global board
 
