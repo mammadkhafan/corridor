@@ -5,7 +5,7 @@
 #include<math.h>
 int hbj;
 
-
+int qw;
 char board[32][32];     //global board
 
 void Botdecision(char *decision){
