@@ -4,7 +4,7 @@
 #include<time.h>
 #include<math.h>
 
-
+int qw;
 char board[32][32];     //global board
 
 void Botdecision(char *decision){
