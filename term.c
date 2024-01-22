@@ -6,6 +6,7 @@
 
 
 
+
 typedef struct File File;
 char board[32][32];     //global board
 int wallSaverOfP1[2][48];
@@ -169,15 +170,16 @@ void printBoard(int n){
 
         }
 }
-void stuckError(){
+void stuckError(int swOfPlayerType,int counter){
+    if (! ( !swOfPlayerType && counter%2==1)){
     setTextColor(4,0);
     printf("your opponent will stuck with this wall!\n");
     setTextColor(7,0);
+    }
 }
-void BoardExitError(int swOfPlayerType)
+void BoardExitError(int swOfPlayerType,int counter)
 {
-    if (swOfPlayerType)
-    {
+    if (! ( !swOfPlayerType && counter%2==1)){
     setTextColor(4,0);
     printf("You cannot move in this direction because you are out of board!\n");
     sleep(1000);
@@ -185,10 +187,9 @@ void BoardExitError(int swOfPlayerType)
     setTextColor(7,0);
     }
 }
-void WallPassingError(int swOfPlayerType)
+void WallPassingError(int swOfPlayerType,int counter)
 {
-    if (swOfPlayerType)
-    {
+    if (! ( !swOfPlayerType && counter%2==1)){
         setTextColor(4,0);
         printf("You cannot jupm through the wall!!\n");
         sleep(1000);
@@ -196,19 +197,17 @@ void WallPassingError(int swOfPlayerType)
         setTextColor(7,0);
     }
 }
-void ZeroWallError(int swOfPlayerType)
+void ZeroWallError(int swOfPlayerType,int counter)
 {
-    if (swOfPlayerType)
-    {
+    if (! ( !swOfPlayerType && counter%2==1)){
         setTextColor(4,0);
         printf("you dont have wall anymore\nyou can just move\n");
         setTextColor(7,0);
     }
 }
-void RemainingWalls(int howMany,int swOfPlayerType)
+void RemainingWalls(int howMany,int swOfPlayerType,int counter)
 {
-    if (swOfPlayerType)
-    {
+    if (! ( !swOfPlayerType && counter%2==1)){
     setTextColor(6,0);
     printf("!!!!!!you have just %d more walls!!!!!!\n",howMany);
     setTextColor(7,0);
@@ -237,45 +236,78 @@ void orderError(){
     printf("please select between S and L\n");
     setTextColor(7,0);
 }
-void newsOfIncreasingWalls(int counter){
-    if (counter%2==0)
-    {
-        setTextColor(10,0);
-        printf("Hey playe1\ntow walls have been added to your walls\n");
-        setTextColor(7,0);
+void newsOfIncreasingWalls(int swOfPlayerType,int counter){
+    if (! ( !swOfPlayerType && counter%2==1)){
+        if (counter%2==0)
+        {
+            setTextColor(10,0);
+            printf("Hey playe1\ntow walls have been added to your walls\n");
+            setTextColor(7,0);
+        }
+        else
+        {
+            setTextColor(10,0);
+            printf("Hey playe2\ntow walls have been added to your wall\n");
+            setTextColor(7,0);
+        }
     }
-    else
-    {
-        setTextColor(10,0);
-        printf("Hey playe2\ntow walls have been added to your wall\n");
-        setTextColor(7,0);
-    }
-    
 
 }
-void newsOfIncreasingAndDecreasingWalls(int counter){
-    if (counter%2==0)
-    {
-        setTextColor(10,0);
-        printf("one of player 2 walls have stoled and added to yours\n");
-        setTextColor(7,0);
-    }
-    else
-    {
-        setTextColor(10,0);
-        printf("one of player 1 walls have stoled and added to yours\n");
-        setTextColor(7,0);
+void newsOfIncreasingAndDecreasingWalls(int swOfPlayerType,int counter){
+    if (! ( !swOfPlayerType && counter%2==1)){
+        if (counter%2==0)
+        {
+            setTextColor(10,0);
+            printf("one of player 2 walls have stoled and added to yours\n");
+            setTextColor(7,0);
+        }
+        else
+        {
+            setTextColor(10,0);
+            printf("one of player 1 walls have stoled and added to yours\n");
+            setTextColor(7,0);
+        }
     }
 }
-void newsOfDecreasingWall(){
-    setTextColor(12,0);
-    printf("We have removed two walls from you\n");
-    setTextColor(7,0);
+void newsOfDecreasingWall(int swOfPlayerType,int counter){
+    if (! ( !swOfPlayerType && counter%2==1)){
+        if (counter%2==0)
+        {
+            setTextColor(12,0);
+            printf("Hey player1 We have removed two walls from you\n");
+            setTextColor(7,0);
+        }
+        else
+        {
+            setTextColor(12,0);
+            printf("Hey player2 We have removed two walls from you\n");
+            setTextColor(7,0);
+        }
+    }
+
 }
-void newsOfBlocking(){
-    setTextColor(12,0);
-    printf("We have been blocked to playing two round\n");
+void newsOfBlocking(int swOfPlayerType,int counter){
+    if (! ( !swOfPlayerType && counter%2==1)){
+        if (counter%2==0)
+        {
+            setTextColor(12,0);
+            printf("player1 have been blocked to playing two round\n");
+            setTextColor(7,0);
+        }
+        else
+        {
+            setTextColor(12,0);
+            printf("player2 have been blocked to playing two round\n");
+            setTextColor(7,0);
+        }
+    }
+
+}
+void wallInfo(int w1,int w2){
+    setTextColor(14,0);
+    printf("walls of player1 = %d\nwalls of player2 = %d",w1,w2);
     setTextColor(7,0);
+    printf("\n");
 }
 
 //func of prisone check
@@ -534,23 +566,21 @@ void open_file_info2(int *n, int *x1, int *y1, int *x2, int *y2, int *x1Saver, i
 
 
 //Spells and rewards
-void reward(int counter,int w1,int w2,int botOrPlayer){
+void reward(int counter,int w1,int w2,int swOfPlayerType){
 if (rand()%2==0)        //add some walls
 {
     if (counter%2==0)
     {
         w1+=2;
-        if (botOrPlayer)
-        newsOfIncreasingWalls(counter);
          
     }
     else
     {
         w2+=2;
-        if (botOrPlayer)
-        newsOfIncreasingWalls(counter);
          
     }
+    newsOfIncreasingWalls(swOfPlayerType,counter);
+    wallInfo(w1,w2);
   
 }
 else        //remove frome opponent and add to yours
@@ -559,25 +589,21 @@ else        //remove frome opponent and add to yours
     {
         w1++;
         if (w2>0) w2--;
-        if (botOrPlayer)
-        newsOfIncreasingAndDecreasingWalls(counter);
-
     }
     else
     {
         w2++;
-        if (w1>0) w1--;
-        if (botOrPlayer)
-        newsOfIncreasingAndDecreasingWalls(counter);
-        
+        if (w1>0) w1--;     
     }
+    newsOfIncreasingWalls(swOfPlayerType,counter);
+    wallInfo(w1,w2);
     
 }
 
 
 
 }
-int spell(int counter,int w1,int w2,int n,int botOrPlayer){
+int spell(int counter,int w1,int w2,int n,int swOfPlayerType){
     int randNum=rand();
     if (randNum%3==0)       //delete players walls of a player
     {
@@ -589,10 +615,13 @@ int spell(int counter,int w1,int w2,int n,int botOrPlayer){
             }
             clearscreen();
             printBoard(n);
-            if (botOrPlayer){
+
+            if (! ( !swOfPlayerType && counter%2==1)){
             setTextColor(12,0);
             printf("surprize!\n");
             setTextColor(7,0);
+
+            return 0;
             }
             
         }
@@ -604,10 +633,13 @@ int spell(int counter,int w1,int w2,int n,int botOrPlayer){
             }
             clearscreen();
             printBoard(n);
-            if (botOrPlayer){
+
+            if (! ( !swOfPlayerType && counter%2==1)){
             setTextColor(12,0);
             printf("surprize!\n");
             setTextColor(7,0);
+
+            return 0;
             }
         }
   
@@ -630,12 +662,15 @@ int spell(int counter,int w1,int w2,int n,int botOrPlayer){
         {
             w2--;
         }
-        if (botOrPlayer)
-        newsOfDecreasingWall();
+        newsOfDecreasingWall(swOfPlayerType,counter);
+        wallInfo(w1,w2);
+        return 0;
          
     }
     else        //block user
     {
+        newsOfBlocking(swOfPlayerType,counter);
+        sleep(2500);
         if (counter%2==0)
         {
             return +3;
@@ -644,15 +679,14 @@ int spell(int counter,int w1,int w2,int n,int botOrPlayer){
         {
             return -3;
         }
-        if (botOrPlayer)
-        newsOfBlocking();
+
     }
     
     
     
 }
 
-int counter=-1;      //my code with this variable can recognize this time which player is playing
+int counter=0;      //my code with this variable can recognize this time which player is playing
 int sign=0;     //this variable is to recognize this turn one of the players is block or not
 
 int main(){
@@ -662,7 +696,7 @@ int main(){
     {
         setTextColor(9, 0);
         printf("shall we start over(press S) or load the last game(press L)?\n");
-        setTextColor(6, 0);
+        setTextColor(7, 0);
         scanf(" %c", &order);
         if (order=='S'|| order=='L') break;
         else orderError;
@@ -739,7 +773,6 @@ int main(){
             scanf("%c", &player);
             if (player == 'N') {
                 swOfPlayerType = 0;
-                mORwPrint();
                 break;
             } else if (player == 'Y') {
                 break;
@@ -749,40 +782,7 @@ int main(){
     }
     while (x1!=x2Saver && x2!=x1Saver)
     {
-        if (sign==0)        //reward or spell
-        {
-            counter++;
-        }
-        else if (sign>0)    //player one is block
-        {
-            if (sign==+3)
-            {
-                counter++;
-                sign--;
-            }
-            else
-            {
-                counter+=2;
-                sign--;
-            }
-        }
-        else        //player tow is block
-        {
-            if (sign==-3)
-            {
-                counter++;
-                sign++;
-            }
-            else
-            {
-                counter+=2;
-                sign++;
-            }
-
-        }
-        
-
-        if (rand()%2==0)
+        if (rand()%2==0)        //reward or spell
         {
             reward(counter,p1Walls,p2Walls,swOfPlayerType);
         }
@@ -795,8 +795,37 @@ int main(){
             }
             
         }
+
+        if (sign>0)    //player one is block
+        {
+            if (sign==(+3))
+            {
+                counter++;
+                sign--;
+            }
+            else
+            {
+                counter+=2;
+                sign--;
+            }
+        }
+        else if (sign<0)        //player tow is block
+        {
+            if (sign==(-3))
+            {
+                counter++;
+                sign++;
+            }
+            else
+            {
+                counter+=2;
+                sign++;
+            }
+
+        }
         
-        if (swOfPlayerType)
+        
+        if (! ( !swOfPlayerType && counter%2==1))
         {
             mORwPrint();
         }
@@ -880,7 +909,7 @@ int main(){
                         }
                         else
                         {
-                            WallPassingError(swOfPlayerType);
+                            WallPassingError(swOfPlayerType,counter);
                         }
                     }
                     else if (type == 'w' && x1-1>-1)
@@ -892,7 +921,7 @@ int main(){
                         }
                         else
                         {
-                            WallPassingError(swOfPlayerType);
+                            WallPassingError(swOfPlayerType,counter);
                         }
                     }
                     else if (type == 's' && x1+2<n && x1+1==x2 && y1==y2)
@@ -904,7 +933,7 @@ int main(){
                         }
                         else
                         {
-                            WallPassingError(swOfPlayerType);
+                            WallPassingError(swOfPlayerType,counter);
                         }
                     }
                     else if (type == 's' && x1+1<n)
@@ -916,7 +945,7 @@ int main(){
                         }
                         else
                         {
-                            WallPassingError(swOfPlayerType);
+                            WallPassingError(swOfPlayerType,counter);
                         }
                     }
                     else if (type == 'd' && y1+2<n && x1==x2 && y1+1==y2)
@@ -928,7 +957,7 @@ int main(){
                         }
                         else
                         {
-                            WallPassingError(swOfPlayerType);
+                            WallPassingError(swOfPlayerType,counter);
                         }
                     }
                     else if (type == 'd' && y1+1<n)
@@ -940,7 +969,7 @@ int main(){
                         }
                         else
                         {
-                            WallPassingError(swOfPlayerType);
+                            WallPassingError(swOfPlayerType,counter);
                         }
                     }
                     else if (type == 'a' && y1-2>-1 && x1==x2 && y1-1==y2)
@@ -952,7 +981,7 @@ int main(){
                         }
                         else
                         {
-                            WallPassingError(swOfPlayerType);
+                            WallPassingError(swOfPlayerType,counter);
                         }
                     }
                     else if(type == 'a' && y1-1>-1)
@@ -964,7 +993,7 @@ int main(){
                         }
                         else
                         {
-                            WallPassingError(swOfPlayerType);
+                            WallPassingError(swOfPlayerType,counter);
                         }
                     }
 
@@ -999,13 +1028,13 @@ int main(){
                             y1++;
                             break;
                         }
-                        else BoardExitError(swOfPlayerType);
+                        else BoardExitError(swOfPlayerType,counter);
                     }
 
 
                     else
                     {
-                        BoardExitError(swOfPlayerType);
+                        BoardExitError(swOfPlayerType,counter);
                     }
                 }
 
@@ -1024,7 +1053,7 @@ int main(){
                         }
                         else
                         {
-                            WallPassingError(swOfPlayerType);
+                            WallPassingError(swOfPlayerType,counter);
                         }
                     }
                     else if (type == 'w' && x2-1>-1)
@@ -1036,7 +1065,7 @@ int main(){
                         }
                         else
                         {
-                            WallPassingError(swOfPlayerType);
+                            WallPassingError(swOfPlayerType,counter);
                         }
                     }
                     else if (type == 's' && x2+2<n && x2+1==x1 && y2==y1)
@@ -1048,7 +1077,7 @@ int main(){
                         }
                         else
                         {
-                            WallPassingError(swOfPlayerType);
+                            WallPassingError(swOfPlayerType,counter);
                         }
                     }
                     else if (type == 's' && x2+1<n)
@@ -1060,7 +1089,7 @@ int main(){
                         }
                         else
                         {
-                            WallPassingError(swOfPlayerType);
+                            WallPassingError(swOfPlayerType,counter);
                         }
                     }
                     else if (type == 'd' && y2+2<n && x2==x1 && y2+1==y1)
@@ -1072,7 +1101,7 @@ int main(){
                         }
                         else
                         {
-                            WallPassingError(swOfPlayerType);
+                            WallPassingError(swOfPlayerType,counter);
                         }
                     }
                     else if (type == 'd' && y2+1<n)
@@ -1084,7 +1113,7 @@ int main(){
                         }
                         else
                         {
-                            WallPassingError(swOfPlayerType);
+                            WallPassingError(swOfPlayerType,counter);
                         }
                     }
                     else if (type == 'a' && y2-2>-1 && x2==x1 && y2-1==y1)
@@ -1096,7 +1125,7 @@ int main(){
                         }
                         else
                         {
-                            WallPassingError(swOfPlayerType);
+                            WallPassingError(swOfPlayerType,counter);
                         }
                     }
                     else if(type == 'a' && y2-1>-1)
@@ -1108,7 +1137,7 @@ int main(){
                         }
                         else
                         {
-                            WallPassingError(swOfPlayerType);
+                            WallPassingError(swOfPlayerType,counter);
                         }
                     }
 
@@ -1145,12 +1174,12 @@ int main(){
                             y2++;
                             break;
                         }
-                        else BoardExitError(swOfPlayerType);
+                        else BoardExitError(swOfPlayerType,counter);
                     }
 
                     else
                     {
-                        BoardExitError(swOfPlayerType);
+                        BoardExitError(swOfPlayerType,counter);
                     }
                 }
             }     //end of move
@@ -1172,7 +1201,7 @@ int main(){
                 }
                 else
                 {
-                    ZeroWallError(swOfPlayerType);
+                    ZeroWallError(swOfPlayerType,counter);
                     goto lable;
                 }
 
@@ -1185,7 +1214,7 @@ int main(){
                 }
                 else
                 {
-                    ZeroWallError(swOfPlayerType);
+                    ZeroWallError(swOfPlayerType,counter);
                     goto lable;
                 }
 
@@ -1266,11 +1295,11 @@ int main(){
 
                     if (counter%2==0 && p1Walls<4)
                     {
-                        RemainingWalls(p1Walls,swOfPlayerType);
+                        RemainingWalls(p1Walls,swOfPlayerType,counter);
                     }
                     else if (counter%2!=0 && p2Walls<4)
                     {
-                        RemainingWalls(p2Walls,swOfPlayerType);
+                        RemainingWalls(p2Walls,swOfPlayerType,counter);
                     }
                     // break;
                 }
@@ -1301,11 +1330,11 @@ int main(){
 
                     if (counter%2==0 && p1Walls<4)
                     {
-                        RemainingWalls(p1Walls,swOfPlayerType);
+                        RemainingWalls(p1Walls,swOfPlayerType,counter);
                     }
                     else if (counter%2!=0 && p2Walls<4)
                     {
-                        RemainingWalls(p2Walls,swOfPlayerType);
+                        RemainingWalls(p2Walls,swOfPlayerType,counter);
                     }
                     // break;
                 }       //end of putting walls in the board
@@ -1329,7 +1358,7 @@ int main(){
                     }
                     else
                     {
-                        stuckError();
+                        stuckError(swOfPlayerType,counter);
                         p1Walls++;
                         if (wallDirect=='H')
                         {
@@ -1361,7 +1390,7 @@ int main(){
                     }
                     else
                     {
-                        stuckError();
+                        stuckError(swOfPlayerType,counter);
                         p2Walls++;
                         if (wallDirect=='H')
                         {
@@ -1394,7 +1423,14 @@ int main(){
 
         clearscreen();      //clear terminal
 
+        wallInfo(p1Walls,p2Walls);      //rwmmwmbering how many walls player one and tow have
+
         printBoard(n);      //print the updated board
+
+        if (sign==0)        
+        {
+            counter++;
+        }
 
         if(!swOfPlayerType && counter%2!=0){
             mORwPrint();
