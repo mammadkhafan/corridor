@@ -8,12 +8,20 @@
 
 
 typedef struct File File;
+//global variables
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
 char board[32][32];     //global board
+int counter=0;      //my code with this variable can recognize this time which player is playing
+int sign=0;     //this variable is to recognize this turn one of the players is block or not
 int wallSaverOfP1[2][48];
 int wallSaverOfP2[2][48];  
 int wallOfP1Counter=0; 
-int wallOfP2Counter=0;        
+int wallOfP2Counter=0;
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 //functions of Bot
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
 void Botdecision(char *decision){
     if ((rand() % 10)>6)
     {
@@ -21,6 +29,7 @@ void Botdecision(char *decision){
     }
     else *decision='m';
 }
+
 void BotType(char *type){
     int random=(rand() % 10);
     if (random>8)
@@ -40,6 +49,7 @@ void BotType(char *type){
         *type='s';
     }
 }
+
 void WallOfBot(int *x,int *y,char *dir,int n){
     if ((rand() % 2)%2==0)
     {
@@ -51,6 +61,7 @@ void WallOfBot(int *x,int *y,char *dir,int n){
     int ySaver;
     xSaver=rand() % 15;
     ySaver=rand() % 15;
+
     while (xSaver>=n)
     {
         xSaver-=n;
@@ -59,28 +70,37 @@ void WallOfBot(int *x,int *y,char *dir,int n){
     {
         ySaver-=n;
     }
+
     *x=xSaver;
     *y=ySaver;
-
 }
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 //functions of attachmant
-void setTextColor(int textColor,int backColor){
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+void setTextColor(int textColor,int backColor)
+{
     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     int colorAttribute = backColor << 4 | textColor;
     SetConsoleTextAttribute(consoleHandle, colorAttribute);
 }
+
 void sleep(unsigned int mseconds)
 {
     clock_t goal = mseconds + clock();
     while (goal>clock());
 }
+
 void clearscreen()
 {
     system("cls");
 }
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
 
-//func of bent moves
+
+//function of bent moves
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
 int bentType(int x1,int y1,int x2,int y2,int turn)
 {
     if (x1-1==x2 && y1==y2)
@@ -112,74 +132,78 @@ int bentType(int x1,int y1,int x2,int y2,int turn)
         return 3;
     }
     else return -1;
-
 }
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
 
-//functions of messages
-void printBoard(int n){
+
+//functions of printf and massages
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+void printBoard(int n)
+{
     for (int i = 0; i < 2*n-1; i++)  
+    {
+        for (int j = 0; j < 2*n-1; j++)
         {
-            for (int j = 0; j < 2*n-1; j++)
+            if (board[i][j]=='1')
             {
-                if (board[i][j]=='1')
+                if (j!=2*n-2)
                 {
-                    if (j!=2*n-2)
-                    {
-                        setTextColor(10,0);
-                        printf("%c",board[i][j]);
-                        setTextColor(7,0);
-                    }
-                    else
-                    {
-                        setTextColor(10,0);
-                        printf("%c\n",board[i][j]);
-                        setTextColor(7,0);
-                    }
-
-
-                }
-                else if (board[i][j]=='2')
-                {
-                    if (j!=2*n-2)
-                    {
-                        setTextColor(12,0);
-                        printf("%c",board[i][j]);
-                        setTextColor(7,0);
-                    }
-                    else
-                    {
-                        setTextColor(12,0);
-                        printf("%c\n",board[i][j]);
-                        setTextColor(7,0);
-                    }
-                }
-                else if (j!=2*n-2)
-                {
-                    setTextColor(11,0);
+                    setTextColor(10,0);
                     printf("%c",board[i][j]);
                     setTextColor(7,0);
                 }
                 else
                 {
-                    setTextColor(11,0);
+                    setTextColor(10,0);
                     printf("%c\n",board[i][j]);
                     setTextColor(7,0);
                 }
-
             }
-
+            else if (board[i][j]=='2')
+            {
+                if (j!=2*n-2)
+                {
+                    setTextColor(12,0);
+                    printf("%c",board[i][j]);
+                    setTextColor(7,0);
+                }
+                else
+                {
+                    setTextColor(12,0);
+                    printf("%c\n",board[i][j]);
+                    setTextColor(7,0);
+                }
+            }
+            else if (j!=2*n-2)
+            {
+                setTextColor(11,0);
+                printf("%c",board[i][j]);
+                setTextColor(7,0);
+            }
+            else
+            {
+                setTextColor(11,0);
+                printf("%c\n",board[i][j]);
+                setTextColor(7,0);
+            }
         }
+    }
 }
-void stuckError(int swOfPlayerType,int counter){
-    if (! ( !swOfPlayerType && counter%2==1)){
+
+void stuckError(int swOfPlayerType,int counter)
+{
+    if (! ( !swOfPlayerType && counter%2==1))
+    {
     setTextColor(4,0);
     printf("your opponent will stuck with this wall!\n");
     setTextColor(7,0);
     }
 }
+
 void BoardExitError(int swOfPlayerType,int counter)
 {
-    if (! ( !swOfPlayerType && counter%2==1)){
+    if (! ( !swOfPlayerType && counter%2==1))
+    {
     setTextColor(4,0);
     printf("You cannot move in this direction because you are out of board!\n");
     sleep(1000);
@@ -187,9 +211,11 @@ void BoardExitError(int swOfPlayerType,int counter)
     setTextColor(7,0);
     }
 }
+
 void WallPassingError(int swOfPlayerType,int counter)
 {
-    if (! ( !swOfPlayerType && counter%2==1)){
+    if (! ( !swOfPlayerType && counter%2==1))
+    {
         setTextColor(4,0);
         printf("You cannot jupm through the wall!!\n");
         sleep(1000);
@@ -197,47 +223,61 @@ void WallPassingError(int swOfPlayerType,int counter)
         setTextColor(7,0);
     }
 }
+
 void ZeroWallError(int swOfPlayerType,int counter)
 {
-    if (! ( !swOfPlayerType && counter%2==1)){
+    if (! ( !swOfPlayerType && counter%2==1))
+    {
         setTextColor(4,0);
         printf("you dont have wall anymore\nyou can just move\n");
         setTextColor(7,0);
     }
 }
+
 void RemainingWalls(int howMany,int swOfPlayerType,int counter)
 {
-    if (! ( !swOfPlayerType && counter%2==1)){
+    if (! ( !swOfPlayerType && counter%2==1))
+    {
     setTextColor(6,0);
     printf("!!!!!!you have just %d more walls!!!!!!\n",howMany);
     setTextColor(7,0);
     }
 }
+
 void PrizeOfWinner()
 {
     setTextColor(10,0);
     printf(" () ()\n\\_____/");
     setTextColor(7,0);
 }
-void mORwPrint(){
+
+void mORwPrint()
+{
     setTextColor(9,0);
     printf("if do you want to move press (m)\nand if you want to place a wall press (w)\n");
     setTextColor(7,0);
 }
-void directionPrint(){
+
+void directionPrint()
+{
     setTextColor(9,0);
     printf("In which direction do you want to move?\ntop(w),down(s),right(d),left(a)\n");
     setTextColor(14,0);
     printf("and if that is emergency you have q(top L),e(top R),z(down L),c(down R) options too\n");
     setTextColor(7,0);
 }
-void orderError(){
+
+void orderError()
+{
     setTextColor(4,0);
     printf("please select between S and L\n");
     setTextColor(7,0);
 }
-void newsOfIncreasingWalls(int swOfPlayerType,int counter){
-    if (! ( !swOfPlayerType && counter%2==1)){
+
+void newsOfIncreasingWalls(int swOfPlayerType,int counter)
+{
+    if (! ( !swOfPlayerType && counter%2==1))
+    {
         if (counter%2==0)
         {
             setTextColor(10,0);
@@ -251,10 +291,12 @@ void newsOfIncreasingWalls(int swOfPlayerType,int counter){
             setTextColor(7,0);
         }
     }
-
 }
-void newsOfIncreasingAndDecreasingWalls(int swOfPlayerType,int counter){
-    if (! ( !swOfPlayerType && counter%2==1)){
+
+void newsOfIncreasingAndDecreasingWalls(int swOfPlayerType,int counter)
+{
+    if (! ( !swOfPlayerType && counter%2==1))
+    {
         if (counter%2==0)
         {
             setTextColor(10,0);
@@ -269,8 +311,10 @@ void newsOfIncreasingAndDecreasingWalls(int swOfPlayerType,int counter){
         }
     }
 }
+
 void newsOfDecreasingWall(int swOfPlayerType,int counter){
-    if (! ( !swOfPlayerType && counter%2==1)){
+    if (! ( !swOfPlayerType && counter%2==1))
+    {
         if (counter%2==0)
         {
             setTextColor(12,0);
@@ -284,50 +328,56 @@ void newsOfDecreasingWall(int swOfPlayerType,int counter){
             setTextColor(7,0);
         }
     }
-
 }
+
 void newsOfBlocking(int swOfPlayerType,int counter){
-    if (! ( !swOfPlayerType && counter%2==1)){
+    if (! ( !swOfPlayerType && counter%2==1))
+    {
         if (counter%2==0)
         {
             setTextColor(12,0);
-            printf("player1 have been blocked to playing two round\n");
+            printf("player1 have been blocked playing two round\n");
             setTextColor(7,0);
         }
         else
         {
             setTextColor(12,0);
-            printf("player2 have been blocked to playing two round\n");
+            printf("player2 have been blocked playing two round\n");
             setTextColor(7,0);
         }
     }
-
 }
-void wallInfo(int w1,int w2){
+
+void wallInfo(int *w1,int *w2)
+{
     setTextColor(14,0);
-    printf("walls of player1 = %d\nwalls of player2 = %d",w1,w2);
+    printf("walls of player1 = %d\nwalls of player2 = %d",*w1,*w2);
     setTextColor(7,0);
     printf("\n");
 }
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
 
-//func of prisone check
-int paint(int n,int xOfPlayer,int yOfPlayer,int turn,int x1Saver,int x2Saver){
+
+//function of prisone check
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+int paint(int n,int xOfPlayer,int yOfPlayer,int turn,int x1Saver,int x2Saver)
+{
     char arrey[2*n-1][2*n-1];
-    // int power=pow(2*(n-1),2);
     int saver[1000][2];
     int counter=1;
+
     for (int i = 0; i < 2*n-1; i++)
     {
         for (int j = 0; j < 2*n-1; j++)
         {
             arrey[i][j]=board[i][j];
         }
-
     }
 
     saver[0][0]=xOfPlayer;
     saver[0][1]=yOfPlayer;
 
+    //local variables initialize
     char H=196;
     char V=179;
     char sign='0';
@@ -345,7 +395,6 @@ int paint(int n,int xOfPlayer,int yOfPlayer,int turn,int x1Saver,int x2Saver){
             }
         }
 
-
         if (arrey[saver[k][0]][saver[k][1]-1]!=H && arrey[saver[k][0]][saver[k][1]-1]!=V && saver[k][1]-1>-1)//right
         {
             if (arrey[saver[k][0]][saver[k][1]-2]!=sign)
@@ -355,10 +404,7 @@ int paint(int n,int xOfPlayer,int yOfPlayer,int turn,int x1Saver,int x2Saver){
                 counter++;
                 arrey[saver[k][0]][saver[k][1]-2]=sign;
             }
-
-
         }
-
 
         if (arrey[saver[k][0]-1][saver[k][1]]!=H && arrey[saver[k][0]-1][saver[k][1]]!=V && saver[k][0]-1>-1)//top
         {
@@ -369,9 +415,7 @@ int paint(int n,int xOfPlayer,int yOfPlayer,int turn,int x1Saver,int x2Saver){
                 counter++;
                 arrey[saver[k][0]-2][saver[k][1]]=sign;
             }
-
         }
-
 
         if (arrey[saver[k][0]+1][saver[k][1]]!=H && arrey[saver[k][0]+1][saver[k][1]]!=V && saver[k][0]+1<2*n-1)//down
         {
@@ -382,10 +426,7 @@ int paint(int n,int xOfPlayer,int yOfPlayer,int turn,int x1Saver,int x2Saver){
                 counter++;
                 arrey[saver[k][0]+2][saver[k][1]]=sign;
             }
-
         }
-
-
     }
 
     if (turn%2==0)      //the turn of player 2
@@ -396,9 +437,7 @@ int paint(int n,int xOfPlayer,int yOfPlayer,int turn,int x1Saver,int x2Saver){
             {
                 return 1;       //it means your opponent is safe
             }
-
         }
-
     }
     else
     {
@@ -408,28 +447,31 @@ int paint(int n,int xOfPlayer,int yOfPlayer,int turn,int x1Saver,int x2Saver){
             {
                 return 1;       //it means your opponent is safe
             }
-
         }
     }
 
     return 0;
-
-
 }
 
-
+//initialize the files
+//-----------------------------------------------------------------------------------------------------------------------------------------------------
 FILE *prjFile;
 FILE *prjFile2;
 FILE *prjFile3;
 FILE *prjFile4;
 FILE *prjFile5;
+//------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 //functions of game saving
-void open_file_board(int n){
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+void open_file_board(int n)
+{
+    prjFile = fopen("D:\\TermOne\\Term1_TermProject\\board_saver.txt", "wt");
 
-    prjFile = fopen("C:\\Users\\ASUS\\Desktop\\kargah_mabani\\board_saver.txt", "wt");
-
-    if(!prjFile){
-        printf("can't open file");
+    if(!prjFile)
+    {
+        printf("can't open file1");
         exit(0);
     }
     for (int i = 0; i < 2*n-1; i++)     //print the updated board
@@ -450,8 +492,6 @@ void open_file_board(int n){
                     fprintf(prjFile, "%c\n",board[i][j]);
                     setTextColor(7,0);
                 }
-
-
             }
             else if (board[i][j]=='2')
             {
@@ -480,27 +520,27 @@ void open_file_board(int n){
                 fprintf(prjFile, "%c\n",board[i][j]);
                 setTextColor(7,0);
             }
-
         }
-
     }
     fclose(prjFile);
 }
-void open_file_board2(){
 
+void open_file_board2()
+{
     int t=0, z=0, n;
     char boardTxt;
 
+    prjFile2 = fopen("D:\\TermOne\\Term1_TermProject\\board_saver.txt", "rt");
+    prjFile5 = fopen("D:\\TermOne\\Term1_TermProject\\board_saver2.txt", "rt");
 
-    prjFile2 = fopen("C:\\Users\\ASUS\\Desktop\\kargah_mabani\\board_saver.txt", "rt");
-    prjFile5 = fopen("C:\\Users\\ASUS\\Desktop\\kargah_mabani\\board_saver2.txt", "rt");
-
-    if(!prjFile2){
+    if(!prjFile2)
+    {
 
         printf("can't open file");
         exit(0);
     }
-    if(!prjFile5){
+    if(!prjFile5)
+    {
 
         printf("can't open file");
         exit(0);
@@ -508,11 +548,13 @@ void open_file_board2(){
 
     fscanf(prjFile2, "%c", &boardTxt);
     fscanf(prjFile5, "%d", &n);
-    while(!feof(prjFile2)){
+    while(!feof(prjFile2))
+    {
         printf("%c", boardTxt);
         board[t][z] = boardTxt;
         z++;
-        if(z > 2 * n - 1){
+        if(z > 2 * n - 1)
+        {
             t++;
             z=0;
         }
@@ -520,28 +562,29 @@ void open_file_board2(){
     }
     fclose(prjFile2);
 }
-void open_file_info(int n, int x1, int y1, int x2, int y2, int x1Saver, int x2Saver, int p1Walls, int p2Walls, char player, int swOfPlayerType, int counter){
 
-    prjFile3 = fopen("C:\\Users\\ASUS\\Desktop\\kargah_mabani\\board_saver2.txt", "wt");
+void open_file_info(int n, int x1, int y1, int x2, int y2, int x1Saver, int x2Saver, int p1Walls, int p2Walls, char player, int swOfPlayerType, int counter)
+{
+    prjFile3 = fopen("D:\\TermOne\\Term1_TermProject\\board_saver2.txt", "wt");
 
-    if(!prjFile3){
-        printf("can't open file");
+    if(!prjFile3)
+    {
+        printf("can't open file2");
         exit(0);
     }
 
     fprintf(prjFile3, "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%c\n%d\n%d", n, x1, y1, x2, y2, x1Saver, x2Saver, p1Walls, p2Walls, player, swOfPlayerType, counter);
-
     fclose(prjFile3);
-
 }
-void open_file_info2(int *n, int *x1, int *y1, int *x2, int *y2, int *x1Saver, int *x2Saver, int *p1Walls, int *p2Walls, char *player, int *swOfPlayerType, int *counter){
 
+void open_file_info2(int *n, int *x1, int *y1, int *x2, int *y2, int *x1Saver, int *x2Saver, int *p1Walls, int *p2Walls, char *player, int *swOfPlayerType, int *counter)
+{
     int infoTxt;
     char infoTxt2;
-    prjFile4 = fopen("C:\\Users\\ASUS\\Desktop\\kargah_mabani\\board_saver2.txt", "rt");
+    prjFile4 = fopen("D:\\TermOne\\Term1_TermProject\\board_saver2.txt", "rt");
 
-    if(!prjFile4){
-
+    if(!prjFile4)
+    {
         printf("can't open file");
         exit(0);
     }
@@ -560,51 +603,50 @@ void open_file_info2(int *n, int *x1, int *y1, int *x2, int *y2, int *x1Saver, i
     fscanf(prjFile4, "%d\n", &infoTxt); *counter = infoTxt;
 
     fclose(prjFile4);
-
-
 }
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-//Spells and rewards
-void reward(int counter,int w1,int w2,int swOfPlayerType){
-if (rand()%2==0)        //add some walls
+//Spells and rewards finctions
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+void reward(int counter,int *w1,int *w2,int swOfPlayerType)
 {
-    if (counter%2==0)
+    if (rand()%2==0)        //add some walls
     {
-        w1+=2;
-         
+        if (counter%2==0)
+        {
+            *w1+=2;
+            
+        }
+        else
+        {
+            *w2+=2;
+            
+        }
+        newsOfIncreasingWalls(swOfPlayerType,counter);
+        wallInfo(&*w1,&*w2);
     }
-    else
+    else        //remove frome opponent and add to yours
     {
-        w2+=2;
-         
+        if (counter%2==0 && *w2>0)
+        {
+            *w1++;
+            if (*w2>0) *w2--;
+        }
+        else
+        {
+            *w2++;
+            if (*w1>0) *w1--;     
+        }
+        newsOfIncreasingAndDecreasingWalls(swOfPlayerType,counter);
+        wallInfo(&*w1,&*w2);  
     }
-    newsOfIncreasingWalls(swOfPlayerType,counter);
-    wallInfo(w1,w2);
-  
 }
-else        //remove frome opponent and add to yours
+
+int spell(int counter,int *w1,int *w2,int n,int swOfPlayerType)
 {
-    if (counter%2==0 && w2>0)
-    {
-        w1++;
-        if (w2>0) w2--;
-    }
-    else
-    {
-        w2++;
-        if (w1>0) w1--;     
-    }
-    newsOfIncreasingWalls(swOfPlayerType,counter);
-    wallInfo(w1,w2);
-    
-}
-
-
-
-}
-int spell(int counter,int w1,int w2,int n,int swOfPlayerType){
     int randNum=rand();
+
     if (randNum%3==0)       //delete players walls of a player
     {
         if (counter%2==0)
@@ -616,9 +658,10 @@ int spell(int counter,int w1,int w2,int n,int swOfPlayerType){
             clearscreen();
             printBoard(n);
 
-            if (! ( !swOfPlayerType && counter%2==1)){
+            if (! ( !swOfPlayerType && counter%2==1))
+            {
             setTextColor(12,0);
-            printf("surprize!\n");
+            printf("surprize!\nAll of your walls in the board has been deleted\n");
             setTextColor(7,0);
 
             return 0;
@@ -634,39 +677,41 @@ int spell(int counter,int w1,int w2,int n,int swOfPlayerType){
             clearscreen();
             printBoard(n);
 
-            if (! ( !swOfPlayerType && counter%2==1)){
+            if (! ( !swOfPlayerType && counter%2==1))
+            {
             setTextColor(12,0);
-            printf("surprize!\n");
+            printf("surprize!\nAll of your walls in the board has been deleted\n");
             setTextColor(7,0);
 
             return 0;
             }
         }
-  
     }
+
     else if (randNum%3==1)      //decrease wall
     {
-        if (counter%2==0 && w1>2)
+        if (counter%2==0 && *w1>2)
         {
-            w1-=2;
+            *w1-=2;
         }
-        else if (counter%2==0 && w1<=2)
+        else if (counter%2==0 && *w1<=2)
         {
-            w1--;
+            *w1--;
         }
-        if (counter%2==1 && w2>2)
+        if (counter%2==1 && *w2>2)
         {
-            w2-=2;
+            *w2-=2;
         }
-        else if (counter%2==1 && w2<=2)
+        else if (counter%2==1 && *w2<=2)
         {
-            w2--;
+            *w2--;
         }
         newsOfDecreasingWall(swOfPlayerType,counter);
-        wallInfo(w1,w2);
-        return 0;
-         
+        wallInfo(&*w1,&*w2);
+
+        return 0;     
     }
+
     else        //block user
     {
         newsOfBlocking(swOfPlayerType,counter);
@@ -679,18 +724,22 @@ int spell(int counter,int w1,int w2,int n,int swOfPlayerType){
         {
             return -3;
         }
-
-    }
-    
-    
-    
+    }    
 }
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
 
-int counter=0;      //my code with this variable can recognize this time which player is playing
-int sign=0;     //this variable is to recognize this turn one of the players is block or not
 
-int main(){
+//MAIN
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+int main()
+{
+    //SRAND problem solver
     srand(time(NULL));
+    //---------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+    //load or play
+    //---------------------------------------------------------------------------------------------------------------------------------------------------
     char order;
     while (1)
     {
@@ -701,6 +750,7 @@ int main(){
         if (order=='S'|| order=='L') break;
         else orderError;
     }
+
     int n;
     int p1Walls, x1, y1;
     int p2Walls, x2, y2;
@@ -709,40 +759,46 @@ int main(){
     char player;
     int swOfPlayerType = 1;
 
-
-    if(order == 'L'){
+    if(order == 'L')
+    {
         setTextColor(2, 0);
         printf("previous board:\n\n");
         setTextColor(6, 0);
         open_file_board2();
         open_file_info2(&n, &x1, &y1, &x2, &y2, &x1Saver, &x2Saver, &p1Walls, &p2Walls, &player, &swOfPlayerType, &counter);
-
     }
+    //---------------------------------------------------------------------------------------------------------------------------------------------------
 
-    else {
 
+    //initialize the defaulte information of Game
+    //---------------------------------------------------------------------------------------------------------------------------------------------------
+    else 
+    {
+        setTextColor(9, 0);
+        printf("give the default information of game to computer\n");
+        setTextColor(7, 0);
         scanf("%d", &n);
-        for (int i = 0; i < 2 * n - 1; i++) {
-            for (int j = 0; j < 2 * n - 1; j++) {
-                if (i % 2 == 0 && j % 2 == 0) {
+
+        //create the board whith squares
+        for (int i = 0; i < 2 * n - 1; i++) 
+        {
+            for (int j = 0; j < 2 * n - 1; j++) 
+            {
+                if (i % 2 == 0 && j % 2 == 0) 
+                {
                     board[i][j] = 254;
                 } else board[i][j] = 32;
-
             }
-
-        }       //create the board whith squares
+        }       
 
         scanf("%d %d\n%d %d", &x1, &y1, &x2, &y2);
         board[2 * x1][2 * y1] = '1';      //simbol of player1
         board[2 * x2][2 * y2] = '2';      //simbol of player2
 
 
-        //end of board defult setting
+        //print the default board
+        printBoard(n);      
 
-        printBoard(n);      //print the default board
-
-
-        //move and place walls will start from bellow
 
         setTextColor(9, 0);
         printf("pleas Determine how many walls the player1 has\n");
@@ -752,12 +808,15 @@ int main(){
         printf("pleas Determine how many walls the player2 has\n");
         setTextColor(7, 0);
         scanf("%d", &p2Walls);
-        //finish line for player2
 
-        if (x1 >= n / 2) {
+        //initialize finish line for each player
+        if (x1 >= n / 2) 
+        {
             x1Saver = n - 1;
             x2Saver = 0;
-        } else {
+        } 
+        else 
+        {
             x1Saver = 0;
             x2Saver = n - 1;
         }
@@ -766,37 +825,51 @@ int main(){
         getchar();
 
 
-        while (1) {
+        //play with bot or player
+        while (1) 
+        {
             setTextColor(5, 0);
             printf("do you have any friend to play with?Y=(yes) / N=(no,play with Bot)\n");
             setTextColor(7, 0);
             scanf("%c", &player);
-            if (player == 'N') {
+            if (player == 'N') 
+            {
                 swOfPlayerType = 0;
                 break;
-            } else if (player == 'Y') {
+            } 
+            else if (player == 'Y') 
+            {
                 break;
             }
-
         }
     }
+    //---------------------------------------------------------------------------------------------------------------------------------------------------
+
+    //Play
+    //---------------------------------------------------------------------------------------------------------------------------------------------------
     while (x1!=x2Saver && x2!=x1Saver)
     {
-        if (rand()%2==0)        //reward or spell
+        //reward or spell
+        //-----------------------------------------------------------------------------------------------------------------------------------------------
+        if (rand()%2==0)        
         {
-            reward(counter,p1Walls,p2Walls,swOfPlayerType);
+            reward(counter,&p1Walls,&p2Walls,swOfPlayerType);
         }
         else
         {
-            int num=spell(counter,p1Walls,p2Walls,n,swOfPlayerType);
+            int num=spell(counter,&p1Walls,&p2Walls,n,swOfPlayerType);
             if (abs(num)==3)
             {
                 sign=num;
-            }
-            
+            }   
         }
+        //-----------------------------------------------------------------------------------------------------------------------------------------------
 
-        if (sign>0)    //player one is block
+
+
+        //if players are block
+        //-----------------------------------------------------------------------------------------------------------------------------------------------
+        if (sign>0)    //player one is blocked
         {
             if (sign==(+3))
             {
@@ -809,7 +882,7 @@ int main(){
                 sign--;
             }
         }
-        else if (sign<0)        //player tow is block
+        else if (sign<0)        //player tow is blocked
         {
             if (sign==(-3))
             {
@@ -821,10 +894,12 @@ int main(){
                 counter+=2;
                 sign++;
             }
-
         }
+        //-----------------------------------------------------------------------------------------------------------------------------------------------
         
         
+        //select between m or w
+        //-----------------------------------------------------------------------------------------------------------------------------------------------
         if (! ( !swOfPlayerType && counter%2==1))
         {
             mORwPrint();
@@ -835,7 +910,9 @@ int main(){
             printf("wait for Bot\n");
             setTextColor(7,0);
         }
+
         char decision;
+
         while (1 && !(swOfPlayerType==0 && counter%2!=0))
         {
 
@@ -850,22 +927,25 @@ int main(){
                 printf("you should choose between w(place a wall) & m(move your piece)\n");
                 setTextColor(7,0);
             }
-
-
-
         }
+
         if (!swOfPlayerType && counter%2!=0)
         {
             Botdecision(&decision);
-        }       //end of select between m & w
+        }
+        //-----------------------------------------------------------------------------------------------------------------------------------------------
 
 
+
+        //code block of move 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------
         if (decision=='m')
         {
-
             lable:
             while (1)
             {
+                //select direction
+                //----------------------------------------------------------------------------------------------------------------------------------------
                 if (!(swOfPlayerType==0 && counter%2!=0))
                 {
                    directionPrint();
@@ -890,9 +970,14 @@ int main(){
                 if (!swOfPlayerType && counter%2!=0)
                 {
                     BotType(&type);
-                }       //end of select move type
+                }       
+                //end of select move type
+                //----------------------------------------------------------------------------------------------------------------------------------------
 
 
+
+                //move of player one
+                //----------------------------------------------------------------------------------------------------------------------------------------
                 int retu=bentType(x1,y1,x2,y2,counter);
                 if (counter%2==0)
                 {
@@ -1028,19 +1113,23 @@ int main(){
                             y1++;
                             break;
                         }
+
                         else BoardExitError(swOfPlayerType,counter);
                     }
-
 
                     else
                     {
                         BoardExitError(swOfPlayerType,counter);
                     }
                 }
+                //end of move of player one
+                //-----------------------------------------------------------------------------------------------------------------------------------------
 
 
 
 
+                //move of player tow
+                //-----------------------------------------------------------------------------------------------------------------------------------------
                 else
                 {
                     board[2*x2][2*y2]=254;
@@ -1174,6 +1263,7 @@ int main(){
                             y2++;
                             break;
                         }
+
                         else BoardExitError(swOfPlayerType,counter);
                     }
 
@@ -1182,17 +1272,27 @@ int main(){
                         BoardExitError(swOfPlayerType,counter);
                     }
                 }
-            }     //end of move
-            board[2*x1][2*y1]='1';      //player 1 moved
-            board[2*x2][2*y2]='2';      //player 2 moved
+                //end of move of player tow
+                //--------------------------------------------------------------------------------------------------------------------------------------
+            }
+
+            //edit the players place
+            board[2*x1][2*y1]='1';
+            board[2*x2][2*y2]='2';
 
         }
+        //end of move
+        //-----------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
 
+        //place wall
+        //-----------------------------------------------------------------------------------------------------------------------------------------------
         else if (decision=='w')
         {
+            //decreas wall
+            //-------------------------------------------------------------------------------------------------------------------------------------------
             if (counter%2==0)
             {
                 if (p1Walls>0)
@@ -1204,7 +1304,6 @@ int main(){
                     ZeroWallError(swOfPlayerType,counter);
                     goto lable;
                 }
-
             }
             else
             {
@@ -1217,8 +1316,8 @@ int main(){
                     ZeroWallError(swOfPlayerType,counter);
                     goto lable;
                 }
-
             }
+            //-------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -1226,6 +1325,7 @@ int main(){
             {
                 int xOfWall;
                 int yOfWall;
+
                 if (!(swOfPlayerType==0 && counter%2!=0))
                 {
                 setTextColor(9,0);
@@ -1241,7 +1341,11 @@ int main(){
                 scanf("%d",&xOfWall);
                 scanf("%d",&yOfWall);
                 }
+
+                //select the wall direction
+                //----------------------------------------------------------------------------------------------------------------------------------------
                 char wallDirect;
+
                 while (1 && !(swOfPlayerType==0 && counter%2!=0))
                 {
                     scanf(" %c",&wallDirect);
@@ -1259,13 +1363,17 @@ int main(){
                         setTextColor(7,0);
                     }
                 }
+
                 if (swOfPlayerType==0 && counter%2!=0)
                 {
                     WallOfBot(&xOfWall,&yOfWall,&wallDirect,n);
-                }        //end of wall selectiont
+                }        
+                //end of wall selectiont
+                //----------------------------------------------------------------------------------------------------------------------------------------
 
 
-
+                //aplly wall
+                //----------------------------------------------------------------------------------------------------------------------------------------
                 xOfWall *= 2;
                 yOfWall *= 2;
                 if(wallDirect == 'H' && xOfWall-1>-1  && xOfWall<2*n-1 && yOfWall>-1 && yOfWall+2<2*n-1 && board[xOfWall-1][yOfWall] == 32 && board[xOfWall-1][yOfWall + 1] == 32 && board[xOfWall-1][yOfWall + 2]  == 32)
@@ -1278,6 +1386,7 @@ int main(){
                         wallSaverOfP1[1][wallOfP1Counter+2]=yOfWall+2;
                         wallOfP1Counter+=3;
                     }
+
                     else
                     {
                         wallSaverOfP1[0][wallOfP2Counter] = wallSaverOfP1[0][wallOfP2Counter+1] = wallSaverOfP1[0][wallOfP2Counter+2] = xOfWall-1;
@@ -1313,6 +1422,7 @@ int main(){
                         wallSaverOfP1[1][wallOfP1Counter+2]=xOfWall-2;
                         wallOfP1Counter+=3;
                     }
+
                     else
                     {
                         wallSaverOfP1[0][wallOfP2Counter] = wallSaverOfP1[0][wallOfP2Counter+1] = wallSaverOfP1[0][wallOfP2Counter+2] = yOfWall-1;
@@ -1347,9 +1457,11 @@ int main(){
                         setTextColor(7,0);
                     }
                 }
+                //----------------------------------------------------------------------------------------------------------------------------------------
 
 
-
+                //prisone check
+                //----------------------------------------------------------------------------------------------------------------------------------------
                 if (counter%2==0)
                 {
                     if (paint(n,2*x2,2*y2,counter,x1Saver,x2Saver))
@@ -1376,12 +1488,9 @@ int main(){
 
                             board[xOfWall-2][yOfWall-1] = 32;
                         }
-
-
                     }
-
-
                 }
+
                 else
                 {
                     if (paint(n,2*x1,2*y1,counter,x1Saver,x2Saver))
@@ -1408,22 +1517,19 @@ int main(){
 
                             board[xOfWall-2][yOfWall-1] = 32;
                         }
-
-
                     }
-
                 }
-
-
-
+                //---------------------------------------------------------------------------------------------------------------------------------------
             }
-
         }
 
 
+
+        //update everything
+        //-----------------------------------------------------------------------------------------------------------------------------------------------
         clearscreen();      //clear terminal
 
-        wallInfo(p1Walls,p2Walls);      //rwmmwmbering how many walls player one and tow have
+        wallInfo(&p1Walls,&p2Walls);      //remmember how many walls player one and tow have
 
         printBoard(n);      //print the updated board
 
@@ -1439,8 +1545,14 @@ int main(){
 
         open_file_board(n);
         open_file_info(n, x1, y1, x2, y2, x1Saver, x2Saver, p1Walls, p2Walls, player, swOfPlayerType, counter);
+        //-----------------------------------------------------------------------------------------------------------------------------------------------
     }
     //end of geme
+    //---------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+    //declare winner
+    //-----------------------------------------------------------------------------------------------------------------------------------------------
     if (x2==x1Saver)
     {
         if (swOfPlayerType)
@@ -1463,14 +1575,16 @@ int main(){
         printf("Hey player 1\nYou won\n");
         setTextColor(7,0);
     }
+
     if (!(x2==x1Saver && swOfPlayerType==0))
     {
         PrizeOfWinner();
     }
-    else printf("nooobe-h sag");
-
-
     
+    else printf("nooobe-h sag");
+    //-----------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
     return 0;
 }
