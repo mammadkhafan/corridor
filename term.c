@@ -348,10 +348,10 @@ void newsOfBlocking(int swOfPlayerType,int counter){
     }
 }
 
-void wallInfo(int *w1,int *w2)
+void wallInfo(int w1,int w2)
 {
     setTextColor(14,0);
-    printf("walls of player1 = %d\nwalls of player2 = %d",*w1,*w2);
+    printf("walls of player1 = %d\nwalls of player2 = %d",w1,w2);
     setTextColor(7,0);
     printf("\n");
 }
@@ -624,22 +624,21 @@ void reward(int counter,int *w1,int *w2,int swOfPlayerType)
             
         }
         newsOfIncreasingWalls(swOfPlayerType,counter);
-        wallInfo(&*w1,&*w2);
+        wallInfo(*w1 , *w2);
     }
     else        //remove frome opponent and add to yours
     {
         if (counter%2==0 && *w2>0)
         {
             *w1++;
-            if (*w2>0) *w2--;
+            *w2--;
         }
-        else
+        else if (counter%2==1 && *w1>0)
         {
             *w2++;
-            if (*w1>0) *w1--;     
+            *w1--;     
         }
         newsOfIncreasingAndDecreasingWalls(swOfPlayerType,counter);
-        wallInfo(&*w1,&*w2);  
     }
 }
 
@@ -690,24 +689,24 @@ int spell(int counter,int *w1,int *w2,int n,int swOfPlayerType)
 
     else if (randNum%3==1)      //decrease wall
     {
-        if (counter%2==0 && *w1>2)
+        if (counter%2==0 && *w1>=2)
         {
             *w1-=2;
         }
-        else if (counter%2==0 && *w1<=2)
+        else if (counter%2==0 && *w1<2 && *w1>0)
         {
             *w1--;
         }
-        if (counter%2==1 && *w2>2)
+        if (counter%2==1 && *w2>=2)
         {
             *w2-=2;
         }
-        else if (counter%2==1 && *w2<=2)
+        else if (counter%2==1 && *w2<2 && *w2>0)
         {
             *w2--;
         }
         newsOfDecreasingWall(swOfPlayerType,counter);
-        wallInfo(&*w1,&*w2);
+        wallInfo(*w1,*w2);
 
         return 0;     
     }
@@ -1529,7 +1528,7 @@ int main()
         //-----------------------------------------------------------------------------------------------------------------------------------------------
         clearscreen();      //clear terminal
 
-        wallInfo(&p1Walls,&p2Walls);      //remmember how many walls player one and tow have
+        wallInfo(p1Walls,p2Walls);      //remmember how many walls player one and tow have
 
         printBoard(n);      //print the updated board
 
